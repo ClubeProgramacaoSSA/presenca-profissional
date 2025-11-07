@@ -1,0 +1,55 @@
+name: Testar Pull Request
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'participantes.json'
+      - 'presenca.py'
+      - 'requirements.txt'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout código
+      uses: actions/checkout@v4
+
+    - name: Configurar Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Instalar dependências
+      run: |
+        pip install -r requirements.txt
+
+    - name: Validar JSON
+      run: |
+        python -m json.tool participantes.json > /dev/null
+        echo "✅ JSON válido!"
+
+    - name: Testar programa
+      run: |
+        python presenca.py
+        echo "✅ Programa executado com sucesso!"
+
+    - name: Verificar campos obrigatórios
+      run: |
+        python -c "
+        import json
+        with open('participantes.json', 'r', encoding='utf-8') as f:
+            data = json.load(f)
+            participantes = data.get('participantes', [])
+
+            campos_obrigatorios = ['nome', 'github', 'curso', 'instituicao']
+
+            for idx, p in enumerate(participantes, 1):
+                for campo in campos_obrigatorios:
+                    if campo not in p or not p[campo]:
+                        print(f'❌ Participante {idx} está faltando o campo: {campo}')
+                        exit(1)
+
+        print('✅ Todos os participantes têm os campos obrigatórios!')
+        "
