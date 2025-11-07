@@ -1,4 +1,4 @@
-# 🎓 Workshop: GitHub para Presença Profissional
+# 🎓 Workshop: GitHub: Contruindo sua Presença Profissional
 
 Bem-vindo ao workshop sobre como usar GitHub para construir sua presença profissional! Este é um projeto prático onde você vai aprender a fazer seu primeiro Pull Request.
 
